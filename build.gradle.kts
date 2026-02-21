@@ -32,5 +32,9 @@ dependencies {
     testImplementation(libs.ktor.server.test.host)
     testImplementation(libs.kotlin.test.junit)
 
+    implementation(libs.exposed.core)
+    implementation(libs.exposed.dao)
+    implementation(libs.exposed.jdbc)
+
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.1")
 }

@@ -17,11 +17,11 @@ class UserServiceImpl(private val candidateRepository: CandidateRepository,
     }
 
     override fun getCandidate(id: UserId): Candidate {
-        return candidateRepository.getCandidate(id)
+        return candidateRepository.getCandidate(userRepository.getUser(id).candidate)
     }
 
     override fun updateUserInfo(id: UserId, newVal: UserDto) {
-        val user = candidateRepository.getCandidate(id)
+        val user = candidateRepository.getCandidate(userRepository.getUser(id).candidate)
 
         user.contact = newVal.contact
         user.orientation = newVal.orientation

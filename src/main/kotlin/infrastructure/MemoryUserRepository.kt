@@ -11,8 +11,10 @@ class MemoryUserRepository: UserRepository {
         return users.first {it.id == id}
     }
 
-    override fun addUser(user: User) {
+    override fun addUser(user: User): User {
+        user.id = UserId(users.size - 1)
         users.add(user)
+        return user
     }
 
     override fun removeUser(user: User) {

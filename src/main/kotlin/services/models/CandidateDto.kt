@@ -2,7 +2,6 @@ package com.lesterade.services.models
 
 import com.lesterade.domain.Candidate
 import com.lesterade.domain.Gender
-import com.lesterade.domain.Orientation
 import kotlinx.serialization.Serializable
 
 @Serializable

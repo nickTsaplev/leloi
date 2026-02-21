@@ -1,5 +1,6 @@
 package com.lesterade.controllers
 
+import com.lesterade.domain.CandidateId
 import com.lesterade.domain.UserId
 import com.lesterade.services.ConnectingService
 import com.lesterade.services.models.toDto
@@ -47,9 +48,9 @@ fun Application.ConfigueConnections() {
         post("/like") {
             val session = call.sessions.get<UserSession>()
             if (session != null) {
-                val userId = call.parameters["user"]
-                if (userId != null) {
-                    val id = UserId(userId.toInt())
+                val liked = call.parameters["liked"]
+                if (liked != null) {
+                    val id = CandidateId(liked.toInt())
                     connector.like(session.id, id)
                     call.respond(HttpStatusCode.OK)
                 } else
@@ -63,9 +64,9 @@ fun Application.ConfigueConnections() {
         post("/respond") {
             val session = call.sessions.get<UserSession>()
             if (session != null) {
-                val userId = call.parameters["user"]
-                if (userId != null) {
-                    val id = UserId(userId.toInt())
+                val liked = call.parameters["liked"]
+                if (liked != null) {
+                    val id = CandidateId(liked.toInt())
                     connector.like(session.id, id)
                     call.respond(HttpStatusCode.OK, connector.getContact(session.id, id))
                 } else
@@ -79,9 +80,9 @@ fun Application.ConfigueConnections() {
         post("/skip") {
             val session = call.sessions.get<UserSession>()
             if (session != null) {
-                val userId = call.parameters["user"]
-                if (userId != null) {
-                    val id = UserId(userId.toInt())
+                val liked = call.parameters["liked"]
+                if (liked != null) {
+                    val id = CandidateId(liked.toInt())
                     connector.skip(session.id, id)
                     call.respond(HttpStatusCode.OK)
                 } else

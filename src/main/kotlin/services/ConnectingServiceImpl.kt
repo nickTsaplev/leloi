@@ -1,6 +1,7 @@
 package com.lesterade.services
 
 import com.lesterade.domain.Candidate
+import com.lesterade.domain.CandidateId
 import com.lesterade.domain.UserId
 import com.lesterade.infrastructure.interfaces.CandidateRepository
 import com.lesterade.infrastructure.interfaces.LikeRepository
@@ -14,34 +15,25 @@ class ConnectingServiceImpl(private val candidateRepository: CandidateRepository
     private val matcher = DumbMatcher(candidateRepository)
 
     override fun getConnections(user: UserId): Collection<Candidate> {
-        val collection = matcher.getConnections(user).toList()
-
-        val numberSet = mutableSetOf<Int>()
-        while (numberSet.size < min(collection.size / 2, 20)) {
-            var next = Random.nextInt(collection.size)
-            while (numberSet.contains(next))
-                next = Random.nextInt(collection.size)
-            numberSet.add(next)
-        }
-
-        return numberSet.map { collection[it] }
+        return matcher.getConnections(userRepository.getUser(user).candidate).toList()
     }
 
     override fun getMyLikes(user: UserId): Collection<Candidate> {
-        return likeRepository.getLikes(user).map { candidateRepository.getCandidate(it) }
+        return likeRepository.getLikes(userRepository.getUser(user).candidate).map { candidateRepository.getCandidate(it) }
     }
 
-    override fun getContact(from: UserId, to: UserId): String {
-        if (!likeRepository.doesLike(from, to))
+    override fun getContact(from: UserId, to: CandidateId): String {
+        val fromC = userRepository.getUser(from).candidate
+        if (!likeRepository.doesLike(fromC, to))
             return ""
 
-        if (!likeRepository.doesLike(to, from))
+        if (!likeRepository.doesLike(to, fromC))
             return ""
 
         return candidateRepository.getCandidate(to).contact
     }
 
-    override fun like(from: UserId, likes: UserId): Boolean {
+    override fun like(from: UserId, likes: CandidateId): Boolean {
         val user = userRepository.getUser(from)
 
         if (user.likeQuota == 0) {
@@ -54,7 +46,7 @@ class ConnectingServiceImpl(private val candidateRepository: CandidateRepository
 
         user.likeQuota--
 
-        likeRepository.like(from, likes)
+        likeRepository.like(user.candidate, likes)
 
         if (user.likeQuota == 0) {
             val current = java.time.Instant.now()
@@ -65,5 +57,5 @@ class ConnectingServiceImpl(private val candidateRepository: CandidateRepository
         return true
     }
 
-    override fun skip(from: UserId, likes: UserId) { }
+    override fun skip(from: UserId, likes: CandidateId) { }
 }

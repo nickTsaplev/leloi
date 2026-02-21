@@ -5,5 +5,6 @@ import com.lesterade.domain.Orientation
 
 data class CandidateQuery(
     val gender: Collection<Gender> = listOf(),
-    val orientation: Collection<Orientation> = listOf()
+    val orientation: Collection<Orientation> = listOf(),
+    val amount: Int = 20
 )
