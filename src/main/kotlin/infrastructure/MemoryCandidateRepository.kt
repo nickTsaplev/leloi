@@ -19,7 +19,7 @@ class MemoryCandidateRepository: CandidateRepository {
     }
 
     override fun addCandidate(candidate: Candidate): Candidate {
-        candidate.id = CandidateId(canList.size - 1)
+        candidate.id = CandidateId(canList.size + 1)
         canList.add(candidate)
         return candidate
     }

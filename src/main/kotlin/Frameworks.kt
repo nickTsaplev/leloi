@@ -16,7 +16,5 @@ import java.sql.Connection
 import java.sql.DriverManager
 
 fun Application.configureFrameworks() {
-    dependencies {
-        provide { GreetingService { "Hello, World!" } }
-    }
+
 }

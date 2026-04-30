@@ -11,8 +11,12 @@ class MemoryUserRepository: UserRepository {
         return users.first {it.id == id}
     }
 
+    override fun getUser(name: String): User {
+        return users.first {it.login == name}
+    }
+
     override fun addUser(user: User): User {
-        user.id = UserId(users.size - 1)
+        user.id = UserId(users.size + 1)
         users.add(user)
         return user
     }

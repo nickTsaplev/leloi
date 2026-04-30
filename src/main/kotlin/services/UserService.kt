@@ -9,9 +9,14 @@ interface UserService {
     fun getUser(id: UserId): User
     fun getCandidate(id: UserId): Candidate
 
-    fun updateUserInfo(id: UserId, newVal: UserDto)
+    fun createUser(login: String, password: String): User
+    fun createUserAndCandidate(login: String, password: String, data: UserDto): User
 
-    fun changePassword(id: UserId, newVal: ByteArray)
+    fun updateCandidateInfo(id: UserId, newVal: UserDto)
+
+    fun changePassword(id: UserId, newVal: String)
 
     fun removeUser(id: UserId)
+
+    fun authorize(name: String, password: String): UserId?
 }

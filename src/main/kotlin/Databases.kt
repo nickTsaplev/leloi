@@ -12,6 +12,7 @@ import io.ktor.server.plugins.requestvalidation.ValidationResult
 import io.ktor.server.request.*
 import io.ktor.server.response.*
 import io.ktor.server.routing.*
+import org.jetbrains.exposed.v1.jdbc.Database
 import java.sql.Connection
 import java.sql.DriverManager
 
@@ -89,4 +90,14 @@ fun Application.connectToPostgres(embedded: Boolean): Connection {
 
         return DriverManager.getConnection(url, user, password)
     }
+}
+
+fun Application.exposedConnectPostgres(): Database {
+    val h2db = Database.connect(
+        "jdbc:postgresql://localhost:${environment.config.property("postgres.port").getString()}/leloi",
+        driver = "org.postgresql.Driver",
+        user = environment.config.property("postgres.user").getString(),
+        password = environment.config.property("postgres.password").getString()
+    )
+    return h2db;
 }

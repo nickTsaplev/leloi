@@ -4,7 +4,8 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 enum class Orientation {
+    Anyone,
     Men,
     Women,
-    Anyone
+
 }

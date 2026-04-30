@@ -5,6 +5,7 @@ import com.lesterade.domain.UserId
 
 interface UserRepository {
     fun getUser(id: UserId): User
+    fun getUser(name: String): User
 
     fun addUser(user: User): User
     fun removeUser(user: User)
