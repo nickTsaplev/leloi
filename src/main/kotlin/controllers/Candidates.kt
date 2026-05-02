@@ -17,6 +17,8 @@ import io.ktor.server.routing.get
 import io.ktor.server.routing.post
 import io.ktor.server.routing.put
 import io.ktor.server.routing.routing
+import io.ktor.server.sessions.get
+import io.ktor.server.sessions.sessions
 
 fun Application.configureCandidates() {
     val userService: UserService by dependencies
@@ -24,25 +26,25 @@ fun Application.configureCandidates() {
     routing() {
         authenticate("auth-basic") {
             put("/api/candidates/myself") {
-                val session = call.principal<UserIdPrincipal>()?.name?.toInt()?.let { UserId(it) }
+                val session = call.sessions.get<UserSession>()
                 if (session != null) {
-                    userService.updateCandidateInfo(session, call.receive())
+                    userService.updateCandidateInfo(UserId(session.id), call.receive())
                     call.respond(HttpStatusCode.OK)
                 } else
                     call.respond(HttpStatusCode.Unauthorized)
             }
             delete("/api/candidates/myself") {
-                val session = call.principal<UserIdPrincipal>()?.name?.toInt()?.let { UserId(it) }
+                val session = call.sessions.get<UserSession>()
                 if (session != null) {
-                    userService.removeUser(session)
+                    userService.removeUser(UserId(session.id))
                     call.respond(HttpStatusCode.OK)
                 } else
                     call.respond(HttpStatusCode.Unauthorized)
             }
             get("/api/candidates/myself") {
-                val session = call.principal<UserIdPrincipal>()?.name?.toInt()?.let { UserId(it) }
+                val session = call.sessions.get<UserSession>()
                 if (session != null) {
-                    call.respond(HttpStatusCode.OK, userService.getCandidate(session).toMyDto())
+                    call.respond(HttpStatusCode.OK, userService.getCandidate(UserId(session.id)).toMyDto())
                 } else
                     call.respond(HttpStatusCode.Unauthorized)
             }

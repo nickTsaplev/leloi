@@ -7,10 +7,11 @@ import com.lesterade.services.models.UserDto
 
 interface UserService {
     fun getUser(id: UserId): User
+    fun getUserByName(name: String): User
     fun getCandidate(id: UserId): Candidate
 
-    fun createUser(login: String, password: String): User
-    fun createUserAndCandidate(login: String, password: String, data: UserDto): User
+    fun createUser(login: String, password: String, email: String): User
+    fun createUserAndCandidate(login: String, password: String, email: String, data: UserDto): User
 
     fun updateCandidateInfo(id: UserId, newVal: UserDto)
 

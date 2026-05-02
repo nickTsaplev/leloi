@@ -47,6 +47,7 @@ dependencies {
     implementation(libs.exposed.core)
     implementation(libs.exposed.dao)
     implementation(libs.exposed.jdbc)
+    implementation("org.jetbrains.exposed:exposed-kotlin-datetime:1.2.0")
     implementation("org.postgresql:postgresql:42.7.8")
 
     implementation("org.mindrot:jbcrypt:0.4")

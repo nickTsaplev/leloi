@@ -94,7 +94,7 @@ fun Application.connectToPostgres(embedded: Boolean): Connection {
 
 fun Application.exposedConnectPostgres(): Database {
     val h2db = Database.connect(
-        "jdbc:postgresql://localhost:${environment.config.property("postgres.port").getString()}/leloi",
+        "jdbc:postgresql://localhost:${environment.config.property("postgres.port").getString()}/prod?sslmode=disable",
         driver = "org.postgresql.Driver",
         user = environment.config.property("postgres.user").getString(),
         password = environment.config.property("postgres.password").getString()

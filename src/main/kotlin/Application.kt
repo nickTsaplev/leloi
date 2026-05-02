@@ -4,6 +4,9 @@ import com.lesterade.controllers.configureSecurity
 import com.lesterade.infrastructure.MemoryCandidateRepository
 import com.lesterade.infrastructure.MemoryLikeRepository
 import com.lesterade.infrastructure.MemoryUserRepository
+import com.lesterade.infrastructure.PostgresCandidateRepository
+import com.lesterade.infrastructure.PostgresUserRepository
+import com.lesterade.infrastructure.PostresLikeRespository
 import com.lesterade.infrastructure.interfaces.CandidateRepository
 import com.lesterade.infrastructure.interfaces.LikeRepository
 import com.lesterade.infrastructure.interfaces.UserRepository
@@ -42,9 +45,9 @@ suspend fun Application.module() {
     val database = exposedConnectPostgres()
     dependencies {
         provide <Database> { database }
-        provide <CandidateRepository> { MemoryCandidateRepository() }
-        provide <LikeRepository> { MemoryLikeRepository() }
-        provide <UserRepository> { MemoryUserRepository() }
+        provide <CandidateRepository> { PostgresCandidateRepository() }
+        provide <LikeRepository> { PostresLikeRespository() }
+        provide <UserRepository> { PostgresUserRepository() }
 
         provide<ConnectingService> { ConnectingServiceImpl(resolve(), resolve(), resolve()) }
         provide<UserService> { UserServiceImpl(resolve(), resolve()) }

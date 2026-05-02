@@ -1,16 +1,20 @@
 package com.lesterade.domain
 
+import kotlinx.datetime.LocalDateTime
+import kotlin.time.Clock
+import kotlin.time.Instant
+
 class User(
     var id: UserId,
     var login: String,
 
-    val candidate: CandidateId,
     var credential: String,
 
-    var likeQuota: Int,
-    var quotaReachedTimestamp: Long) {
+    val email: String,
+    val createdAt: Instant,
+) {
 
-    constructor(login: String, password: String, candidate: CandidateId) :
-            this(UserId(0), login, candidate, password, 11, 0) {
+    constructor(login: String, password: String, email: String) :
+            this(UserId(0), login, password, email, Clock.System.now()) {
     }
 }

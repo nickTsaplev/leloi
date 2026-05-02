@@ -21,9 +21,10 @@ fun Application.configureUserHandling() {
             val name = call.parameters["login"]
             val password = call.parameters["password"]
             val secret = call.parameters["secret"]
+            val email = call.parameters["email"]
 
-            if (secret == "test" && name != null && password != null) {
-                val id = userService.createUser(name, password).id
+            if (secret == "test" && name != null && password != null && email != null) {
+                val id = userService.createUser(name, password, email).id
                 call.respond(HttpStatusCode.Created, id.value)
             } else
                 call.respond(HttpStatusCode.BadRequest)
@@ -32,10 +33,12 @@ fun Application.configureUserHandling() {
             val name = call.parameters["login"]
             val password = call.parameters["password"]
             val secret = call.parameters["secret"]
+            val email = call.parameters["email"]
+
             val data = call.receive<UserDto>()
 
-            if (secret == "test" && name != null && password != null) {
-                val id = userService.createUserAndCandidate(name, password, data).id
+            if (secret == "test" && name != null && password != null && email != null) {
+                val id = userService.createUserAndCandidate(name, password, email, data).id
                 call.respond(HttpStatusCode.Created, id.value)
             } else
                 call.respond(HttpStatusCode.BadRequest)

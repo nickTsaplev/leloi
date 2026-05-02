@@ -16,12 +16,16 @@ class UserServiceImpl(private val candidateRepository: CandidateRepository,
         return userRepository.getUser(id)
     }
 
+    override fun getUserByName(name: String): User {
+        return userRepository.getUser(name)
+    }
+
     override fun getCandidate(id: UserId): Candidate {
-        return candidateRepository.getCandidate(userRepository.getUser(id).candidate)
+        return candidateRepository.getCandidate(userRepository.getUser(id).id.toCandidate())
     }
 
     override fun updateCandidateInfo(id: UserId, newVal: UserDto) {
-        val user = candidateRepository.getCandidate(userRepository.getUser(id).candidate)
+        val user = candidateRepository.getCandidate(userRepository.getUser(id).id.toCandidate())
 
         user.contact = newVal.contact
         user.orientation = newVal.orientation
@@ -32,21 +36,24 @@ class UserServiceImpl(private val candidateRepository: CandidateRepository,
         candidateRepository.updateCandidate(user)
     }
 
-    override fun createUser(login: String, password: String): User {
-        val candidate = candidateRepository.addCandidate(Candidate())
-        return userRepository.addUser(User(login, BCrypt.hashpw(password, BCrypt.gensalt()), candidate.id))
+    override fun createUser(login: String, password: String, email: String): User {
+        val user = userRepository.addUser(User(login, BCrypt.hashpw(password, BCrypt.gensalt()), email))
+        candidateRepository.addCandidate(Candidate(user.id.toCandidate()))
+        return user
     }
 
-    override fun createUserAndCandidate(login: String, password: String, data: UserDto): User {
+    override fun createUserAndCandidate(login: String, password: String, email: String, data: UserDto): User {
+        val user = userRepository.addUser(
+            User(login, BCrypt.hashpw(password, BCrypt.gensalt()), email))
         val candidate = candidateRepository.addCandidate(Candidate(
-            CandidateId(0),
+            user.id.toCandidate(),
             data.gender,
             data.orientation,
             data.name,
             data.description,
             data.contact
         ))
-        return userRepository.addUser(User(login, BCrypt.hashpw(password, BCrypt.gensalt()), candidate.id))
+        return user
     }
 
     override fun changePassword(id: UserId, newVal: String) {

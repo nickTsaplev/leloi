@@ -8,6 +8,7 @@ import com.lesterade.infrastructure.interfaces.LikeRepository
 import com.lesterade.infrastructure.interfaces.UserRepository
 import kotlin.math.min
 import kotlin.random.Random
+import kotlin.time.Clock
 
 class ConnectingServiceImpl(private val candidateRepository: CandidateRepository,
                             private val likeRepository: LikeRepository,
@@ -15,15 +16,15 @@ class ConnectingServiceImpl(private val candidateRepository: CandidateRepository
     private val matcher = DumbMatcher(candidateRepository)
 
     override fun getConnections(user: UserId): Collection<Candidate> {
-        return matcher.getConnections(userRepository.getUser(user).candidate).toList()
+        return matcher.getConnections(userRepository.getUser(user).id.toCandidate()).toList()
     }
 
     override fun getMyLikes(user: UserId): Collection<Candidate> {
-        return likeRepository.getLikes(userRepository.getUser(user).candidate).map { candidateRepository.getCandidate(it) }
+        return likeRepository.getLikes(userRepository.getUser(user).id.toCandidate()).map { candidateRepository.getCandidate(it) }
     }
 
     override fun getContact(from: UserId, to: CandidateId): String {
-        val fromC = userRepository.getUser(from).candidate
+        val fromC = userRepository.getUser(from).id.toCandidate()
         if (!likeRepository.doesLike(fromC, to))
             return ""
 
@@ -36,9 +37,8 @@ class ConnectingServiceImpl(private val candidateRepository: CandidateRepository
     override fun like(from: UserId, likes: CandidateId): Boolean {
         val user = userRepository.getUser(from)
 
-        if (user.likeQuota == 0) {
-            val current = java.time.Instant.now()
-            if (current.toEpochMilli() - user.quotaReachedTimestamp > 1000 * 60 * 60 * 24) {
+        /*if (user.likeQuota == 0) {
+            if ((Clock.System.now() - user.quotaReachedTimestamp).inWholeHours > 24) {
                 user.likeQuota = 11
             } else
                 return false
@@ -46,14 +46,15 @@ class ConnectingServiceImpl(private val candidateRepository: CandidateRepository
 
         user.likeQuota--
 
-        likeRepository.like(user.candidate, likes)
+        likeRepository.like(user.id.toCandidate(), likes)
 
         if (user.likeQuota == 0) {
-            val current = java.time.Instant.now()
-            user.quotaReachedTimestamp = current.toEpochMilli()
-        }
+            user.quotaReachedTimestamp = Clock.System.now()
+        }*/
 
-        userRepository.updateUser(user)
+        likeRepository.like(user.id.toCandidate(), likes)
+
+        //userRepository.updateUser(user)
         return true
     }
 

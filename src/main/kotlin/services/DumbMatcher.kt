@@ -22,7 +22,7 @@ class DumbMatcher(private val candidateRepository: CandidateRepository): Matchin
                 Gender.Male -> listOf(Orientation.Men, Orientation.Anyone)
                 Gender.Female -> listOf(Orientation.Women, Orientation.Anyone)
                 Gender.Other -> listOf(Orientation.Anyone)
-            }, 20)
+            }, listOf(userObj.id.toUserId()), 20)
 
         return candidateRepository.getCandidates(query)
     }
